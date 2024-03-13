@@ -1,0 +1,37 @@
+HTML Structure:
+
+The HTML document starts with <!DOCTYPE html> declaring the document type.
+It includes the <html> element with the lang attribute set to "en".
+The <head> section contains meta tags for character set and viewport settings, along with the title of the webpage.
+Bootstrap CSS is linked from a CDN to provide styling.
+Some additional styling is provided inline within the <style> tag to add padding to the body.
+The <body> section contains the main content of the webpage.
+Container and Form:
+
+Within the <body>, there's a container <div> with the class container.
+Inside the container, there's an <h1> element for the title.
+A form group is created with a label and an input field for users to enter numbers separated by commas.
+A button with the class btn btn-primary is provided for users to trigger the calculation.
+JavaScript Function calculate():
+
+The calculate() function is triggered when the user clicks the "Calculate" button.
+It retrieves the input value from the text field, splits it into an array of numbers, and trims any extra spaces around each number.
+It checks if any of the input values are not valid numbers using isNaN().
+If invalid numbers are found, it displays an error message.
+If all input values are valid, it calculates various statistics:
+Mean: The average of all numbers.
+Median: The middle value of the sorted numbers array.
+Mode: The number(s) that appear most frequently.
+Range: The difference between the maximum and minimum numbers.
+Minimum and Maximum: The smallest and largest numbers, respectively.
+Sum: The total sum of all numbers.
+Outlier: Any numbers that fall outside the lower and upper bounds based on the quartiles.
+Quartiles (Q1, Q2, Q3) and Interquartile Range (IQR): Divides the data into quarters and calculates the range of the middle 50%.
+It then constructs an HTML string (resultHtml) containing the calculated statistics.
+Finally, it updates the content of the <div> with the ID result with the resultHtml.
+Utility Functions:
+
+calculateMedian(): Calculates the median of a sorted array of numbers.
+calculateMode(): Calculates the mode(s) of an array of numbers.
+detectOutliers(): Detects outliers in the dataset based on quartiles and interquartile range.
+calculateQuartiles(): Calculates quartiles (Q1, Q2, Q3) of a sorted array of numbers.
