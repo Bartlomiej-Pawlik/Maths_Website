@@ -28,3 +28,20 @@
 
 
 }
+
+.input:focus {
+    border: 1px solid
+        var(--primary);
+
+
+}
+
+.input:is(:focus, :valid) - label {
+    transform:
+            translateY(-120%)
+            scale(0.7);
+    background-color: #1a1a1a;
+    padding-inline: 0.3rem;
+    color: var(--primary);
+
+}
