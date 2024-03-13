@@ -1,111 +1,54 @@
-function calculate() {
-	const numbers = input.get('data_set').split(/[ ,]+/).numbers().vals();
-	if(!input.valid()) return;
 
-	const numbersLength = numbers.length;
-	const sum = numbers.reduce((a, b) => a + b, 0);
-	const mean = sum / numbersLength;
-	let median;
-
-	if(numbersLength % 2 === 0){
-		median = (numbers[numbersLength / 2] + numbers[(numbersLength / 2) - 1]) / 2;
-	}
-	else {
-		median = numbers[Math.floor(numbersLength / 2)]
-	}
-	const modeValue = mode(numbers);
-	const min = Math.min(...numbers);
-	const max = Math.max(...numbers);
-	const range =  max - min;
-	const q1Value = q1(numbers);
-	const q3Value = q3(numbers);
-	const iqr = q3Value - q1Value;
-	const outliersValue = outliers(numbers, q1Value, q3Value);
-	_('mean-x').innerHTML = mean;
-	_('outliers').innerHTML = outliersValue;
-	_('median-x').innerHTML = median;
-	_('q-1').innerHTML = q1Value;
-	_('q-2').innerHTML = median;
-	_('q-3').innerHTML = q3Value;
-	_('mode').innerHTML = modeValue;
-	_('range').innerHTML = range;
-	_('min').innerHTML = min;
-	_('max').innerHTML = max;
-	_('iqr').innerHTML = iqr;
-	_('sum').innerHTML = sum;
-	_('count').innerHTML = numbersLength;
-}
-
-function mode(array) {
-	let counts = {}
-	let result = [];
-	array.forEach((e) => {
-		if(counts[e] === undefined) {
-			counts[e] = 0
-		}
-		counts[e] += 1
-	});
-
-	let values = Object.values(counts);
-	let keys = Object.keys(counts);
-
-	const max = Math.max(...values);
-	if(max === 1) {
-		return 'All values appeared just once.';
-	}
-	keys.forEach((key) => {
-		if(counts[key] === max) {
-			result.push(key)
-		}
-	});
-	if(result.length === 1) {
-		return result[0] + ' appeared ' + max + ' times';
-	}
-	else {
-		return result.join(', ') + ' each appeared ' + max + ' times'
-	}
-}
-
-function q3(numbers) {
-	const position = Math.ceil(numbers.length / 2);
-	let array = numbers.map(x => x);
-	array = array.splice(position);
-	const arrayLength = array.length;
-	let median;
-	if(arrayLength % 2 === 0){
-		median = (array[arrayLength / 2] + array[(arrayLength / 2) - 1]) / 2;
-	}
-	else {
-		median = array[Math.floor(arrayLength / 2)]
-	}
-	return median;
-}
-
-function q1(numbers) {
-	const arrayLength = Math.floor(numbers.length / 2);
-	let array = numbers.map(x => x);
-	array = array.splice(0, arrayLength);
-	if(arrayLength % 2 === 0){
-		return (array[arrayLength / 2] + array[(arrayLength / 2) - 1]) / 2;
-	}
-	else {
-		return array[Math.floor(arrayLength / 2)]
-	}
-}
-
-function outliers(numbers, q1, q3) {
-	const iqr = q3 - q1;
-	const result = [];
-	numbers.forEach(x => {
-		if(x > (q3 + 1.5 * iqr) || x < (q1 - 1.5 * iqr)){
-			result.push(x)
-		}
-	})
-	if(!result.length) {
-		return 'none';
-	}
-	else {
-		return result.join(', ');
-	}
-}
-
+const Fractions = {
+    // helpers
+    isCorrectMixed(whole, num, denom){
+      return !(!whole && !num && !denom || !num && denom || num && !denom);
+    },
+    buildFrac(whole, num, denom){
+      whole = Number(whole);
+      num = Number(num);
+      denom = Number(denom);
+      return num && denom ? 
+        math.fraction(
+          (math.sign(whole) || 1) * (math.sign(num) || 1) * (math.sign(denom) || 1) * 
+          (math.abs(whole) * math.abs(denom) + math.abs(num)), math.abs(denom)
+        ) :
+        math.fraction(whole, 1)
+      ;
+    },
+    getFracPart(frac){
+      return frac.d != 1 ? {
+        num: frac.n % frac.d, denom: frac.d,
+      } : '';
+    },
+    getWholePart(frac){
+      const sign = frac.s == -1 ? '-' : '';
+      const wholePart = (frac.n - frac.n % frac.d) / frac.d;
+      if(wholePart == 0 && this.getFracPart(frac)) return sign;
+      return sign + wholePart;
+    },
+    getChartData(frac){
+      const fracPart = this.getFracPart(frac);
+      const wholePart = this.getWholePart(frac);
+      return fracPart ? [fracPart.num, fracPart.denom-fracPart.num] : (wholePart == 0 ? [0,1]:[1,0]);
+    },
+    outputFrac(frac, prefix){
+      const isWhole = frac.d == 1;
+      const sign = frac.s == -1 ? '-' : ''; 
+      _(prefix+'Whole').classList[!isWhole && !sign ? 'add':'remove']('hidden');
+      _(prefix+'Whole').innerText = sign + (isWhole ? frac.n : '');
+      _(prefix+'Frac').classList[isWhole?'add':'remove']('hidden');
+      _(prefix+'Num').innerText = frac.n;
+      _(prefix+'Denom').innerText = frac.d;
+    },
+    outputMixed(frac, prefix){
+      const fracPart = this.getFracPart(frac);
+      const wholePart = this.getWholePart(frac);
+      _(prefix+'Whole').classList[!wholePart?'add':'remove']('hidden');
+      _(prefix+'Whole').innerText = wholePart;
+      _(prefix+'Frac').classList[!fracPart?'add':'remove']('hidden');
+      _(prefix+'Num').innerText = fracPart.num;
+      _(prefix+'Denom').innerText = fracPart.denom;
+    }
+  }
+  
