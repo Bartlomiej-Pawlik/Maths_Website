@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistics Calculator</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding: 50px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1 class="text-center mb-4">Statistics Calculator</h1>
+  <div class="form-group">
+    <label for="numbers">Enter numbers separated by commas:</label>
+    <input type="text" class="form-control" id="numbers" placeholder="e.g., 2, 5, 10, 20">
+  </div>
+  <button type="button" class="btn btn-primary" onclick="calculate()">Calculate</button>
+
+  <div id="result" class="mt-4"></div>
+</div>
+
+<script>
+  function calculate() {
+    const input = document.getElementById('numbers').value;
+    const numbers = input.split(',').map(num => parseFloat(num.trim()));
+
+    if (numbers.some(isNaN)) {
+      document.getElementById('result').innerHTML = '<p class="text-danger">Please enter valid numbers.</p>';
+      return;
+    }
+
+    const mean = numbers.reduce((acc, curr) => acc + curr, 0) / numbers.length;
+    const sortedNumbers = numbers.slice().sort((a, b) => a - b);
+    const median = calculateMedian(sortedNumbers);
+    const mode = calculateMode(numbers);
+    const range = Math.max(...numbers) - Math.min(...numbers);
+    const minimum = Math.min(...numbers);
+    const maximum = Math.max(...numbers);
+    const sum = numbers.reduce((acc, curr) => acc + curr, 0);
+    const outlier = detectOutliers(numbers);
+    const quartiles = calculateQuartiles(sortedNumbers);
+    const q1 = quartiles[0];
+    const q2 = quartiles[1];
+    const q3 = quartiles[2];
+    const iqr = q3 - q1;
+
+    const resultHtml = `
+      <p><strong>Mean:</strong> ${mean}</p>
+      <p><strong>Median:</strong> ${median}</p>
+      <p><strong>Mode:</strong> ${mode}</p>
+      <p><strong>Range:</strong> ${range}</p>
+      <p><strong>Minimum:</strong> ${minimum}</p>
+      <p><strong>Maximum:</strong> ${maximum}</p>
+      <p><strong>Sum:</strong> ${sum}</p>
+      <p><strong>Outlier:</strong> ${outlier}</p>
+      <p><strong>Quartile Q1:</strong> ${q1}</p>
+      <p><strong>Quartile Q2 (Median):</strong> ${q2}</p>
+      <p><strong>Quartile Q3:</strong> ${q3}</p>
+      <p><strong>Interquartile Range (IQR):</strong> ${iqr}</p>
+    `;
+
+    document.getElementById('result').innerHTML = resultHtml;
+  }
+
+  function calculateMedian(sortedNumbers) {
+    const mid = Math.floor(sortedNumbers.length / 2);
+    return sortedNumbers.length % 2 !== 0 ? sortedNumbers[mid] : (sortedNumbers[mid - 1] + sortedNumbers[mid]) / 2;
+  }
+
+  function calculateMode(numbers) {
+    const counts = {};
+    numbers.forEach(num => counts[num] = (counts[num] || 0) + 1);
+    const maxCount = Math.max(...Object.values(counts));
+    return Object.keys(counts).filter(key => counts[key] === maxCount).join(', ');
+  }
+
+  function detectOutliers(numbers) {
+    const Q1 = calculateQuartiles(numbers)[0];
+    const Q3 = calculateQuartiles(numbers)[2];
+    const IQR = Q3 - Q1;
+    const lowerBound = Q1 - 1.5 * IQR;
+    const upperBound = Q3 + 1.5 * IQR;
+    return numbers.filter(num => num < lowerBound || num > upperBound).join(', ');
+  }
+
+  function calculateQuartiles(sortedNumbers) {
+    const mid = Math.floor(sortedNumbers.length / 2);
+    const lowerHalf = sortedNumbers.slice(0, mid);
+    const upperHalf = sortedNumbers.slice(mid + (sortedNumbers.length % 2 === 0 ? 0 : 1));
+
+    return [
+      calculateMedian(lowerHalf),
+      calculateMedian(sortedNumbers),
+      calculateMedian(upperHalf)
+    ];
+  }
+</script>
+
+</body>
+</html>
