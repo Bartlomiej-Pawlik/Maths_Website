@@ -16,8 +16,8 @@ function calculate() {
     const maximum = Math.max(...numbers);
     const sum = numbers.reduce((acc, curr) => acc + curr, 0);
     const quartiles = calculateQuartiles(sortedNumbers);
-    const q1 = quartiles[0] - 0.25;
-    const q3 = quartiles[2] + 1;
+    const q1 = (quartiles[0] - 0.25).toFixed(1);
+    const q3 = (quartiles[2] + 1).toFixed(2);
     const iqr = q3 - q1;
     const lowerOutlier = q1 - 1.5 * iqr;
     const upperOutlier = q3 + 1.5 * iqr;
@@ -54,15 +54,22 @@ function calculate() {
     return Object.keys(counts).filter(key => counts[key] === maxCount).join(', ');
   }
 
-  function calculateQuartiles(numbers) {
+  function calculateMedian(numbers) {
+    const mid = Math.floor(numbers.length / 2);
+    return numbers.length % 2 === 0 ? (numbers[mid - 1] + numbers[mid]) / 2 : numbers[mid];
+}
+
+function calculateQuartiles(numbers) {
     numbers.sort((a, b) => a - b);
 
-    const lowerHalf = (numbers.length % 2 === 0) ? numbers.slice(0, numbers.length / 2) : numbers.slice(0, Math.floor(numbers.length / 2));
-    const upperHalf = (numbers.length % 2 === 0) ? numbers.slice(numbers.length / 2, numbers.length) : numbers.slice(Math.floor(numbers.length / 2) + 1, numbers.length);
+    const mid = Math.floor(numbers.length / 2);
+    
+    const lowerHalf = numbers.slice(0, mid);
+    const upperHalf = numbers.slice(numbers.length % 2 === 0 ? mid : mid + 1);
 
     const q1 = calculateMedian(lowerHalf);
     const q2 = calculateMedian(numbers);
     const q3 = calculateMedian(upperHalf);
 
     return [q1, q2, q3];
-  }
+}
