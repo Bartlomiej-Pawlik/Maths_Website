@@ -16,8 +16,8 @@ function calculate() {
     const maximum = Math.max(...numbers);
     const sum = numbers.reduce((acc, curr) => acc + curr, 0);
     const quartiles = calculateQuartiles(sortedNumbers);
-    const q1 = (quartiles[0] - 0.25).toFixed(1);
-    const q3 = (quartiles[2] + 1).toFixed(2);
+    const q1 = (quartiles[0]).toFixed(2);
+    const q3 = (quartiles[2]).toFixed(2);
     const iqr = q3 - q1;
     const lowerOutlier = q1 - 1.5 * iqr;
     const upperOutlier = q3 + 1.5 * iqr;
