@@ -15,11 +15,13 @@ html {
   .top-banner {
     margin-bottom: 30px;
     text-align: center;
-    background-color: #ea4c4c;
+    background-color: #0059ff;
     height: 100px;
     padding-top: 25px;
   }
-  .top-banner a, .top-banner span {
+  
+  .top-banner a, .top-banner span 
+  {
     display: inline-block;
   }
   
@@ -37,14 +39,14 @@ html {
   }
 
   .btn {
-    margin-left: 859px;
+    margin-left: 50%;
     font-size: 33px;
     text-align: center;
     margin-top: 30px;
     cursor: pointer;
     outline: none;
     color: black;
-    background-color: #ea4c4c;
+    background-color: #0059ff;
     border: none;
     border-radius: 15px;
     box-shadow: 0 9px #999;
@@ -52,11 +54,11 @@ html {
    }
 
    .btn:hover {
-    background-color: #ce3a3a;
+    background-color: #0059ff;
    }
 
    .btn:active {
-    background-color: #ce3a3a;
+    background-color: #0059ff;
     box-shadow: 0 5px #666;
     transform: translateY(4px);
    }
@@ -79,4 +81,3 @@ html {
         width: 300px;
         padding: 5px;
       }
-  
